@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models.image import Image
+from app.models.imagen import Imagen
 
 app = create_app()
 
