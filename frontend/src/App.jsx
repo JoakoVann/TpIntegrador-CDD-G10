@@ -1,122 +1,104 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import './index.css'
 import './App.css'
+import Navbar from './components/Navbar'
+import ProcessingParams from './components/ProcessingParams'
+import ImageComparison from './components/ImageComparison'
 
-function App() {
-  const [count, setCount] = useState(0)
+const DEFAULT_PARAMS = {
+  resolucion: 500,
+  bits: 24,
+  compresion: 50,
+}
+
+function DigitalizacionPage() {
+  const [params, setParams] = useState(DEFAULT_PARAMS)
+  const [originalImage, setOriginalImage] = useState(null)
+  const [processedImage, setProcessedImage] = useState(null)
+
+  const handleImageUpload = (file) => {
+    const url = URL.createObjectURL(file)
+    setOriginalImage(url)
+    setProcessedImage(null)
+  }
+
+  const handleApply = () => {
+    // TODO: conectar con el backend
+    if (originalImage) {
+      setProcessedImage(originalImage)
+    }
+  }
+
+  const handleReset = () => {
+    setParams(DEFAULT_PARAMS)
+    setOriginalImage(null)
+    setProcessedImage(null)
+  }
+
+  const handleExport = () => {
+    if (!processedImage) return
+    const a = document.createElement('a')
+    a.href = processedImage
+    a.download = 'imagen_digitalizada.png'
+    a.click()
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="page">
+      <div className="page__subheader">
+        <div className="page__subheader-left">
+          <h1 className="page__title">Digitalización de Imágenes</h1>
+          <p className="page__subtitle">Muestreo y cuantización de color en imágenes analógicas</p>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <div className="page__content">
+        <ProcessingParams
+          params={params}
+          onParamsChange={setParams}
+          onApply={handleApply}
+          onReset={handleReset}
+          onExport={handleExport}
+          onImageUpload={handleImageUpload}
+        />
+        <ImageComparison
+          originalImage={originalImage}
+          processedImage={processedImage}
+        />
+      </div>
+    </div>
   )
 }
 
-export default App
+function CodificacionPage() {
+  return (
+    <div className="page">
+      <div className="page__subheader">
+        <div className="page__subheader-left">
+          <h1 className="page__title">Codificación</h1>
+          <p className="page__subtitle">Próximamente disponible</p>
+        </div>
+      </div>
+      <div className="coming-soon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+        <p>Esta sección estará disponible próximamente.</p>
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('digitalizacion')
+
+  return (
+    <div className="app">
+      <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
+      <main className="app__main">
+        {activeTab === 'digitalizacion' ? <DigitalizacionPage /> : <CodificacionPage />}
+      </main>
+    </div>
+  )
+}
