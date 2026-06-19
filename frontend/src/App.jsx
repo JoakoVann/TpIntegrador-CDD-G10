@@ -4,6 +4,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import ProcessingParams from './components/ProcessingParams'
 import ImageComparison from './components/ImageComparison'
+import TextCodingPanel from './components/TextCodingPanel'
 import {
   uploadImage,
   getOriginalImageUrl,
@@ -126,16 +127,12 @@ function CodificacionPage() {
     <div className="page">
       <div className="page__subheader">
         <div className="page__subheader-left">
-          <h1 className="page__title">Codificación</h1>
-          <p className="page__subtitle">Próximamente disponible</p>
+          <h1 className="page__title">Codificación de Datos</h1>
+          <p className="page__subtitle">Compresión y corrección de errores</p>
         </div>
       </div>
-      <div className="coming-soon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="16 18 22 12 16 6" />
-          <polyline points="8 6 2 12 8 18" />
-        </svg>
-        <p>Esta sección estará disponible próximamente.</p>
+      <div className="page__content">
+        <TextCodingPanel />
       </div>
     </div>
   )
