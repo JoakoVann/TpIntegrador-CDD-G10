@@ -1,0 +1,134 @@
+.comparison-panel {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.comparison-panel__header {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.comparison-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.comparison-panel__title svg {
+  color: var(--accent);
+}
+
+.comparison-panel__body {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  padding: 20px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.comparison-panel__divider {
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 0;
+}
+
+.comparison-panel__divider-line {
+  width: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* Image Pane */
+.image-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.image-pane__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.image-pane__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.image-pane__badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.2px;
+}
+
+.image-pane__badge--blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.image-pane__badge--green {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.image-pane__frame {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 200px;
+  transition: border-color 0.2s ease;
+}
+
+.image-pane__frame:hover {
+  border-color: var(--border-light);
+}
+
+.image-pane__img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.image-pane__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 400;
+  user-select: none;
+}
+
+.image-pane__empty svg {
+  opacity: 0.4;
+}
