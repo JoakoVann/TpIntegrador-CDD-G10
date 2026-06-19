@@ -41,6 +41,32 @@ def endpoint_hamming():
     return jsonify(AdminAlgoritmos.hamming(texto))
 
 
+@controlador_algoritmos_bp.route('/hamming/codificar', methods=['POST'])
+def endpoint_hamming_codificar():
+    """Recibe 4 bits de datos y devuelve el código Hamming(7,4) de 7 bits."""
+    data = request.get_json(silent=True) or {}
+    bits_str = data.get('bits', '')
+    if not isinstance(bits_str, str) or not all(b in '01' for b in bits_str):
+        return jsonify({"error": "El campo 'bits' debe contener solo 0 y 1"}), 400
+    if len(bits_str) != 4:
+        return jsonify({"error": "Se esperan exactamente 4 bits de datos"}), 400
+    resultado = AdminAlgoritmos.hamming_codificar_bits(list(map(int, bits_str)))
+    return jsonify(resultado)
+
+
+@controlador_algoritmos_bp.route('/hamming/decodificar', methods=['POST'])
+def endpoint_hamming_decodificar():
+    """Recibe 7 bits Hamming(7,4) y devuelve los 4 bits de datos corregidos."""
+    data = request.get_json(silent=True) or {}
+    bits_str = data.get('bits', '')
+    if not isinstance(bits_str, str) or not all(b in '01' for b in bits_str):
+        return jsonify({"error": "El campo 'bits' debe contener solo 0 y 1"}), 400
+    if len(bits_str) != 7:
+        return jsonify({"error": "Se esperan exactamente 7 bits (código Hamming(7,4))"}), 400
+    resultado = AdminAlgoritmos.hamming_decodificar_bits(list(map(int, bits_str)))
+    return jsonify(resultado)
+
+
 # ── Comprimir (Huffman + Shannon-Fano combinados) ────────────────────────────
 @controlador_algoritmos_bp.route('/comprimir', methods=['POST'])
 def endpoint_comprimir():

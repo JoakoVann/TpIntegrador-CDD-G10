@@ -384,3 +384,104 @@ class AdminAlgoritmos:
             "longitud_bits_codificados": len(bits_codificados),
             "longitud_bits_decodificados": len(bits_decodificados)
         }
+
+    # ── Hamming bit-level helpers (usados por la UI de bits) ─────────────────
+
+    @staticmethod
+    def hamming_codificar_bits(bits_datos):
+        """Codifica una lista de bits de datos con Hamming y devuelve el código completo.
+
+        Para Hamming(7,4): recibe 4 bits de datos y genera 7 bits con 3 de paridad
+        en posiciones 1, 2 y 4 (1-indexed).
+
+        Args:
+            bits_datos: lista de ints (0/1), ej. [1, 0, 1, 1]
+
+        Returns:
+            dict con bits_codificados (7 ints), posiciones de paridad y longitudes.
+        """
+        import math
+        bits_datos = [int(b) for b in bits_datos]
+        n = len(bits_datos)
+        bits_paridad = 0
+        while (2 ** bits_paridad) < (n + bits_paridad + 1):
+            bits_paridad += 1
+        long_total = n + bits_paridad
+
+        code = [0] * long_total
+        # Colocar bits de datos en posiciones que no son potencias de 2
+        i = 0
+        for j in range(long_total):
+            if not math.log2(j + 1).is_integer():
+                code[j] = bits_datos[i]
+                i += 1
+
+        # Calcular bits de paridad
+        paridad_positions = []
+        for i in range(long_total):
+            pos = i + 1
+            if math.log2(pos).is_integer():
+                paridad = 0
+                for j in range(long_total):
+                    if (j + 1) & pos and j != i:
+                        paridad ^= code[j]
+                code[i] = paridad
+                paridad_positions.append(pos)
+
+        return {
+            "bits_datos":           bits_datos,
+            "bits_codificados":     code,
+            "posiciones_paridad":   paridad_positions,
+            "longitud_bits_original":    n,
+            "longitud_bits_codificados": long_total,
+            "longitud_bits_decodificados": n,
+        }
+
+    @staticmethod
+    def hamming_decodificar_bits(bits_entrada):
+        """Decodifica un código Hamming, detecta y corrige hasta 1 error.
+
+        Para Hamming(7,4): recibe 7 bits y devuelve los 4 bits de datos corregidos.
+
+        Args:
+            bits_entrada: lista de ints (0/1), ej. [0, 1, 1, 0, 0, 1, 1]
+
+        Returns:
+            dict con bits_decodificados (4 ints), error_posicion (0 si no hay error),
+            bits_corregidos (los 7 bits después de corregir) y longitudes.
+        """
+        import math
+        bits = [int(b) for b in bits_entrada]
+        long_entrada = len(bits)
+        bits_paridad = int(math.log2(long_entrada + 1))
+
+        pos_error = 0
+        for i in range(bits_paridad):
+            pos_bit = 2 ** i
+            paridad = 0
+            for j in range(long_entrada):
+                if (j + 1) & pos_bit:
+                    paridad ^= bits[j]
+            if paridad != 0:
+                pos_error += pos_bit
+
+        bits_corregidos = bits[:]
+        if pos_error != 0:
+            bits_corregidos[pos_error - 1] ^= 1
+
+        # Extraer bits de datos (posiciones que no son potencias de 2)
+        bits_datos = [
+            bits_corregidos[i]
+            for i in range(long_entrada)
+            if not math.log2(i + 1).is_integer()
+        ]
+
+        return {
+            "bits_decodificados":        bits_datos,
+            "bits_corregidos":           bits_corregidos,
+            "error_posicion":            pos_error,
+            "longitud_bits_original":    long_entrada,
+            "longitud_bits_codificados": long_entrada,
+            "longitud_bits_decodificados": len(bits_datos),
+        }
+

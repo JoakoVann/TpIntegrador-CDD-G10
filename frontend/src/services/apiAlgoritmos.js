@@ -75,22 +75,41 @@ export function shannonFano(texto) {
 // ── Hamming ───────────────────────────────────────────────────────────────────
 
 /**
- * Codifica y decodifica un texto con Hamming (detección/corrección de errores).
+ * Codifica un texto completo con Hamming (convierte texto → bits → Hamming).
  * @param {string} texto
- * @returns {Promise<{
- *   metodo: string,
- *   texto_original: string,
- *   bits_originales: number[],
- *   bits_codificados: number[],
- *   bits_decodificados: number[],
- *   texto_decodificado: string,
- *   longitud_bits_original: number,
- *   longitud_bits_codificados: number,
- *   longitud_bits_decodificados: number,
- * }>}
  */
 export function hamming(texto) {
   return _post('/hamming', { texto })
+}
+
+/**
+ * Codifica 4 bits de datos en código Hamming(7,4).
+ * @param {string} bits — string de 4 caracteres '0'/'1', ej. "1011"
+ * @returns {Promise<{
+ *   bits_datos: number[],
+ *   bits_codificados: number[],
+ *   posiciones_paridad: number[],
+ *   longitud_bits_original: number,
+ *   longitud_bits_codificados: number,
+ * }>}
+ */
+export function hammingCodificarBits(bits) {
+  return _post('/hamming/codificar', { bits })
+}
+
+/**
+ * Decodifica 7 bits Hamming(7,4), corrige error si hay, y extrae 4 bits de datos.
+ * @param {string} bits — string de 7 caracteres '0'/'1', ej. "0110011"
+ * @returns {Promise<{
+ *   bits_decodificados: number[],
+ *   bits_corregidos: number[],
+ *   error_posicion: number,
+ *   longitud_bits_original: number,
+ *   longitud_bits_decodificados: number,
+ * }>}
+ */
+export function hammingDecodificarBits(bits) {
+  return _post('/hamming/decodificar', { bits })
 }
 
 // ── Comprimir (Huffman + Shannon-Fano combinados) ────────────────────────────

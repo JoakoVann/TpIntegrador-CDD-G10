@@ -6,6 +6,8 @@ import ProcessingParams from './components/ProcessingParams'
 import ImageComparison from './components/ImageComparison'
 import TextInput from './components/TextInput'
 import CodificacionResults from './components/CodificacionResults'
+import HammingInput from './components/HammingInput'
+import HammingResults from './components/HammingResults'
 import {
   uploadImage,
   getOriginalImageUrl,
@@ -125,23 +127,40 @@ function DigitalizacionPage() {
 }
 
 function CodificacionPage() {
+  const [subTab, setSubTab] = useState('compresion')
+
+  // Compresión state
   const [resultado, setResultado] = useState(null)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [errorComp, setErrorComp] = useState(null)
+  const [loadingComp, setLoadingComp] = useState(false)
 
   const handleCodificar = async (texto) => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoadingComp(true)
+      setErrorComp(null)
       const data = await comprimirTexto(texto)
       setResultado(data)
     } catch (err) {
-      setError(err.message || 'Error al codificar el texto')
+      setErrorComp(err.message || 'Error al codificar el texto')
       setResultado(null)
     } finally {
-      setLoading(false)
+      setLoadingComp(false)
     }
   }
+
+  // Hamming state (sin funcionalidad — la lógica la conecta otra persona)
+  const [hammingResultado, setHammingResultado] = useState(null)
+  const [hammingModo, setHammingModo] = useState('decodificar')
+  const [errorHamming] = useState(null)
+  const [loadingHamming] = useState(false)
+
+  const handleHamming = ({ modo }) => {
+    setHammingModo(modo)
+    setHammingResultado(null)
+  }
+
+  const loading = subTab === 'compresion' ? loadingComp : loadingHamming
+  const error = subTab === 'compresion' ? errorComp : errorHamming
 
   return (
     <div className="page">
@@ -154,7 +173,7 @@ function CodificacionPage() {
           {loading && (
             <div className="loading-indicator">
               <div className="spinner" />
-              <span>Codificando...</span>
+              <span>Procesando...</span>
             </div>
           )}
           {error && (
@@ -168,9 +187,41 @@ function CodificacionPage() {
         </div>
       </div>
 
+      <div className="sub-tabs">
+        <button
+          id="subtab-compresion"
+          className={`sub-tabs__btn ${subTab === 'compresion' ? 'sub-tabs__btn--active' : ''}`}
+          onClick={() => setSubTab('compresion')}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Compresión
+        </button>
+        <button
+          id="subtab-hamming"
+          className={`sub-tabs__btn ${subTab === 'hamming' ? 'sub-tabs__btn--active' : ''}`}
+          onClick={() => setSubTab('hamming')}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
+          </svg>
+          Hamming
+        </button>
+      </div>
+
       <div className="page__content">
-        <TextInput onCodificar={handleCodificar} loading={loading} />
-        <CodificacionResults resultado={resultado} error={error} />
+        {subTab === 'compresion' ? (
+          <>
+            <TextInput onCodificar={handleCodificar} loading={loadingComp} />
+            <CodificacionResults resultado={resultado} error={errorComp} />
+          </>
+        ) : (
+          <>
+            <HammingInput onProcesar={handleHamming} loading={loadingHamming} />
+            <HammingResults resultado={hammingResultado} modo={hammingModo} error={errorHamming} />
+          </>
+        )}
       </div>
     </div>
   )

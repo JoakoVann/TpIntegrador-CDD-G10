@@ -114,3 +114,48 @@
   padding: 7px 14px;
   border-radius: var(--radius-md);
 }
+
+/* ─── Sub-tabs (Compresión / Hamming) ────────────────────────────────────── */
+.sub-tabs {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  align-self: flex-start;
+}
+
+.sub-tabs__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: calc(var(--radius-md) - 3px);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.sub-tabs__btn svg {
+  flex-shrink: 0;
+}
+
+.sub-tabs__btn--active {
+  background: var(--accent);
+  color: #0e0e10;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+
+.sub-tabs__btn:not(.sub-tabs__btn--active):hover {
+  background: var(--bg-card-hover);
+  color: var(--text-secondary);
+}
+
